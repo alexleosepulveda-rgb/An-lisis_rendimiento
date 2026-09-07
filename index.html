@@ -1,92 +1,13 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel de Análisis Nutricional</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f8f9fa;
-            color: #333;
-            margin: 0;
-            padding: 40px 20px;
-        }
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            background: white;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        }
-        h1 {
-            color: #2c3e50;
-            margin-top: 0;
-            border-bottom: 2px solid #eaeaea;
-            padding-bottom: 15px;
-            font-size: 24px;
-        }
-        p {
-            color: #666;
-            font-size: 16px;
-            margin-bottom: 30px;
-        }
-        .grid-links {
-            display: grid;
-            gap: 15px;
-        }
-        .card-link {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 18px 22px;
-            background: #ffffff;
-            border: 1px solid #e1e4e8;
-            border-left: 5px solid #3498db;
-            border-radius: 8px;
-            text-decoration: none;
-            color: #2c3e50;
-            font-weight: bold;
-            transition: all 0.2s ease;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
-        }
-        .card-link:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-            border-color: #3498db;
-            background: #fdfefe;
-        }
-        .card-link.green {
-            border-left-color: #2ecc71;
-        }
-        .card-link.green:hover {
-            border-color: #2ecc71;
-        }
-        .arrow {
-            color: #888;
-            font-size: 18px;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>📊 Panel de Control y Gráficos Agronómicos</h1>
-        <p>Selecciona el gráfico que deseas consultar en detalle:</p>
-        
-        <div class="grid-links">
-            <!-- Cambia 'grafico_cajas.html' por el nombre real de tu archivo en GitHub -->
+<div class="grid-links">
+            <!-- Este abre tu gráfico con las 3 casillas -->
             <a href="index2.html" class="card-link">
                 <span>📈 Distribución de Nutrientes por Rendimiento (3 Selectores)</span>
                 <span class="arrow">&#10148;</span>
             </a>
             
-            <!-- Cambia 'distribucion_nutricional_Palto_San_Lucas.html' si tiene otro nombre -->
-            <a href="index3.html" class="card-link green">
+            <!-- Este abre tu gráfico de Palto San Lucas con su nombre real -->
+            <a href="distribucion_nutricional_Palto_San_Lucas.html" class="card-link green">
                 <span>🌱 Distribución Nutricional - Palto San Lucas</span>
                 <span class="arrow">&#10148;</span>
             </a>
         </div>
-    </div>
-</body>
-</html>
