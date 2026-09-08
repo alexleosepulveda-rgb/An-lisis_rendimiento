@@ -1,0 +1,109 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Proporción por Rendimiento de Clasificación</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f4f7f6; }
+        .filters { background: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px; display: flex; gap: 20px; }
+        .filter-group { display: flex; flex-direction: column; }
+        label { font-weight: bold; margin-bottom: 5px; color: #2c3e50; }
+        select { padding: 8px; border-radius: 4px; border: 1px solid #ccc; font-size: 14px; min-width: 200px; }
+
+        #tablaContainer { background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .titulo-resultados { font-size: 18px; font-weight: bold; color: #2c3e50; margin-bottom: 15px; text-align: center; }
+
+        table.styled-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+            text-align: left;
+        }
+        table.styled-table th {
+            background-color: #2c3e50;
+            color: #ffffff;
+            padding: 12px 15px;
+            font-weight: bold;
+            border: 1px solid #1a252f;
+        }
+        table.styled-table td {
+            padding: 10px 15px;
+            border: 1px solid #e0e0e0;
+            color: #333333;
+        }
+        table.styled-table tbody tr:nth-of-type(even) {
+            background-color: #f8f9fa;
+        }
+        table.styled-table tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Distribución de Rendimiento de Clasificación</h2>
+
+    <div class="filters">
+        <div class="filter-group">
+            <label for="predioSelect">Predio:</label>
+            <select id="predioSelect" onchange="actualizarTabla()">
+                <option value="Todos">Todos</option>
+                <option value="El Bosque">El Bosque</option><option value="San Lucas">San Lucas</option><option value="Santa Helena">Santa Helena</option>
+            </select>
+        </div>
+        <div class="filter-group">
+            <label for="especieSelect">Especie:</label>
+            <select id="especieSelect" onchange="actualizarTabla()">
+                <option value="Todas">Todas</option>
+                <option value="Cerezo">Cerezo</option><option value="Limonero">Limonero</option><option value="Mandarino">Mandarino</option><option value="Palto">Palto</option>
+            </select>
+        </div>
+    </div>
+
+    <div id="tablaContainer">
+        <div id="tituloDiv" class="titulo-resultados"></div>
+        <div id="tablaDiv"></div>
+    </div>
+
+<script>
+    var database = {"Todos__Todas": {"categorias": ["Alto", "Bajo", "Medio"], "proporciones": [0.168, 0.326, 0.505], "porcentajes": ["16.8%", "32.6%", "50.5%"]}, "El Bosque__Cerezo": {"categorias": ["Alto", "Bajo", "Medio"], "proporciones": [0.0, 0.0, 0.0], "porcentajes": ["0.0%", "0.0%", "0.0%"]}, "El Bosque__Limonero": {"categorias": ["Alto", "Bajo", "Medio"], "proporciones": [0.286, 0.0, 0.714], "porcentajes": ["28.6%", "0.0%", "71.4%"]}, "El Bosque__Mandarino": {"categorias": ["Alto", "Bajo", "Medio"], "proporciones": [0.0, 0.0, 0.0], "porcentajes": ["0.0%", "0.0%", "0.0%"]}, "El Bosque__Palto": {"categorias": ["Alto", "Bajo", "Medio"], "proporciones": [0.0, 1.0, 0.0], "porcentajes": ["0.0%", "100.0%", "0.0%"]}, "San Lucas__Cerezo": {"categorias": ["Alto", "Bajo", "Medio"], "proporciones": [0.0, 1.0, 0.0], "porcentajes": ["0.0%", "100.0%", "0.0%"]}, "San Lucas__Limonero": {"categorias": ["Alto", "Bajo", "Medio"], "proporciones": [0.5, 0.278, 0.222], "porcentajes": ["50.0%", "27.8%", "22.2%"]}, "San Lucas__Mandarino": {"categorias": ["Alto", "Bajo", "Medio"], "proporciones": [0.0, 0.0, 0.0], "porcentajes": ["0.0%", "0.0%", "0.0%"]}, "San Lucas__Palto": {"categorias": ["Alto", "Bajo", "Medio"], "proporciones": [0.0, 1.0, 0.0], "porcentajes": ["0.0%", "100.0%", "0.0%"]}, "Santa Helena__Cerezo": {"categorias": ["Alto", "Bajo", "Medio"], "proporciones": [0.0, 0.0, 0.0], "porcentajes": ["0.0%", "0.0%", "0.0%"]}, "Santa Helena__Limonero": {"categorias": ["Alto", "Bajo", "Medio"], "proporciones": [0.0, 1.0, 0.0], "porcentajes": ["0.0%", "100.0%", "0.0%"]}, "Santa Helena__Mandarino": {"categorias": ["Alto", "Bajo", "Medio"], "proporciones": [0.5, 0.0, 0.5], "porcentajes": ["50.0%", "0.0%", "50.0%"]}, "Santa Helena__Palto": {"categorias": ["Alto", "Bajo", "Medio"], "proporciones": [0.0, 0.081, 0.919], "porcentajes": ["0.0%", "8.1%", "91.9%"]}, "El Bosque__Todas": {"categorias": ["Alto", "Bajo", "Medio"], "proporciones": [0.1, 0.65, 0.25], "porcentajes": ["10.0%", "65.0%", "25.0%"]}, "San Lucas__Todas": {"categorias": ["Alto", "Bajo", "Medio"], "proporciones": [0.346, 0.5, 0.154], "porcentajes": ["34.6%", "50.0%", "15.4%"]}, "Santa Helena__Todas": {"categorias": ["Alto", "Bajo", "Medio"], "proporciones": [0.102, 0.102, 0.796], "porcentajes": ["10.2%", "10.2%", "79.6%"]}, "Todos__Cerezo": {"categorias": ["Alto", "Bajo", "Medio"], "proporciones": [0.0, 1.0, 0.0], "porcentajes": ["0.0%", "100.0%", "0.0%"]}, "Todos__Limonero": {"categorias": ["Alto", "Bajo", "Medio"], "proporciones": [0.407, 0.259, 0.333], "porcentajes": ["40.7%", "25.9%", "33.3%"]}, "Todos__Mandarino": {"categorias": ["Alto", "Bajo", "Medio"], "proporciones": [0.5, 0.0, 0.5], "porcentajes": ["50.0%", "0.0%", "50.0%"]}, "Todos__Palto": {"categorias": ["Alto", "Bajo", "Medio"], "proporciones": [0.0, 0.404, 0.596], "porcentajes": ["0.0%", "40.4%", "59.6%"]}};
+
+    function actualizarTabla() {
+        var predio = document.getElementById('predioSelect').value;
+        var especie = document.getElementById('especieSelect').value;
+        var key = predio + '__' + especie;
+
+        var datos = database[key] || database['Todos__Todas'];
+
+        // Actualizar título
+        document.getElementById('tituloDiv').innerHTML = 'Resultados para Predio: ' + predio + ' | Especie: ' + especie;
+
+        // Construir tabla HTML dinámicamente
+        var html = '<table class="styled-table">';
+        html += '<thead><tr>';
+        html += '<th>Rendimiento Clasificación</th>';
+        html += '<th>Proporción</th>';
+        html += '<th>Porcentaje (%)</th>';
+        html += '</tr></thead>';
+        html += '<tbody>';
+
+        for (var i = 0; i < datos.categorias.length; i++) {
+            html += '<tr>';
+            html += '<td>' + datos.categorias[i] + '</td>';
+            html += '<td>' + datos.proporciones[i] + '</td>';
+            html += '<td>' + datos.porcentajes[i] + '</td>';
+            html += '</tr>';
+        }
+
+        html += '</tbody></table>';
+
+        document.getElementById('tablaDiv').innerHTML = html;
+    }
+
+    // Inicializar al cargar
+    actualizarTabla();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,82 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Gráfico Circular - Rendimiento de Clasificación</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f4f7f6; }
+        .filters { background: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px; display: flex; gap: 20px; }
+        .filter-group { display: flex; flex-direction: column; }
+        label { font-weight: bold; margin-bottom: 5px; color: #2c3e50; }
+        select { padding: 8px; border-radius: 4px; border: 1px solid #ccc; font-size: 14px; min-width: 200px; }
+
+        #graficoContainer { background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    </style>
+</head>
+<body>
+
+    <h2>Distribución de Rendimiento de Clasificación (Gráfico Circular)</h2>
+
+    <div class="filters">
+        <div class="filter-group">
+            <label for="predioSelect">Predio:</label>
+            <select id="predioSelect" onchange="actualizarGrafico()">
+                <option value="Todos">Todos</option>
+                <option value="El Bosque">El Bosque</option><option value="San Lucas">San Lucas</option><option value="Santa Helena">Santa Helena</option>
+            </select>
+        </div>
+        <div class="filter-group">
+            <label for="especieSelect">Especie:</label>
+            <select id="especieSelect" onchange="actualizarGrafico()">
+                <option value="Todas">Todas</option>
+                <option value="Cerezo">Cerezo</option><option value="Limonero">Limonero</option><option value="Mandarino">Mandarino</option><option value="Palto">Palto</option>
+            </select>
+        </div>
+    </div>
+
+    <div id="graficoContainer">
+        <div id="chartDiv" style="width: 100%; height: 600px;"></div>
+    </div>
+
+<script>
+    var database = {"Todos__Todas": {"labels": ["Alto", "Bajo", "Medio"], "values": [16, 31, 48]}, "El Bosque__Cerezo": {"labels": ["Alto", "Bajo", "Medio"], "values": [0, 0, 0]}, "El Bosque__Limonero": {"labels": ["Alto", "Bajo", "Medio"], "values": [2, 0, 5]}, "El Bosque__Mandarino": {"labels": ["Alto", "Bajo", "Medio"], "values": [0, 0, 0]}, "El Bosque__Palto": {"labels": ["Alto", "Bajo", "Medio"], "values": [0, 13, 0]}, "San Lucas__Cerezo": {"labels": ["Alto", "Bajo", "Medio"], "values": [0, 1, 0]}, "San Lucas__Limonero": {"labels": ["Alto", "Bajo", "Medio"], "values": [9, 5, 4]}, "San Lucas__Mandarino": {"labels": ["Alto", "Bajo", "Medio"], "values": [0, 0, 0]}, "San Lucas__Palto": {"labels": ["Alto", "Bajo", "Medio"], "values": [0, 7, 0]}, "Santa Helena__Cerezo": {"labels": ["Alto", "Bajo", "Medio"], "values": [0, 0, 0]}, "Santa Helena__Limonero": {"labels": ["Alto", "Bajo", "Medio"], "values": [0, 2, 0]}, "Santa Helena__Mandarino": {"labels": ["Alto", "Bajo", "Medio"], "values": [5, 0, 5]}, "Santa Helena__Palto": {"labels": ["Alto", "Bajo", "Medio"], "values": [0, 3, 34]}, "El Bosque__Todas": {"labels": ["Alto", "Bajo", "Medio"], "values": [2, 13, 5]}, "San Lucas__Todas": {"labels": ["Alto", "Bajo", "Medio"], "values": [9, 13, 4]}, "Santa Helena__Todas": {"labels": ["Alto", "Bajo", "Medio"], "values": [5, 5, 39]}, "Todos__Cerezo": {"labels": ["Alto", "Bajo", "Medio"], "values": [0, 1, 0]}, "Todos__Limonero": {"labels": ["Alto", "Bajo", "Medio"], "values": [11, 7, 9]}, "Todos__Mandarino": {"labels": ["Alto", "Bajo", "Medio"], "values": [5, 0, 5]}, "Todos__Palto": {"labels": ["Alto", "Bajo", "Medio"], "values": [0, 23, 34]}};
+
+    function actualizarGrafico() {
+        var predio = document.getElementById('predioSelect').value;
+        var especie = document.getElementById('especieSelect').value;
+        var key = predio + '__' + especie;
+
+        var datos = database[key] || database['Todos__Todas'];
+
+        var dataTrace = [{            values: datos.values,
+            labels: datos.labels,
+            type: 'pie',
+            hole: 0.4, // Estilo dona (puedes cambiarlo a 0 si prefieres torta completa)
+            textinfo: 'label+percent+value',
+            textposition: 'inside',
+            marker: {
+                colors: ['#2c3e50', '#18bc9c', '#f39c12', '#e74c3c', '#3498db', '#9b59b6']
+            }
+        }];
+
+        var layout = {
+            title: {
+                text: '<b>Rendimiento de Clasificación - Predio: ' + predio + ' | Especie: ' + especie + '</b>',
+                font: { size: 16, color: '#2c3e50' }
+            },
+            margin: { l: 40, r: 40, t: 60, b: 40 },
+            showlegend: true,
+            legend: { orientation: 'h', y: -0.2 }
+        };
+
+        Plotly.react('chartDiv', dataTrace, layout);
+    }
+
+    // Inicializar al cargar la página
+    actualizarGrafico();
+</script>
+
+</body>
+</html>
