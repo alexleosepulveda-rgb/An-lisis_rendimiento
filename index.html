@@ -1,37 +1,84 @@
-<div class="grid-links">
-    <!-- 1. Promedios por predio -->
-    <a href="Promedios_por_predio.html" class="card-link">
-        <span>📈 Promedios por Predio</span>
-        <span class="arrow">&#10148;</span>
-    </a>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menú de Gráficos y Reportes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7f6;
+            margin: 0;
+            padding: 40px;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+        .grid-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .card-link {
+            background: #ffffff;
+            padding: 20px 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            text-decoration: none;
+            color: #2c3e50;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            border-left: 5px solid #2c3e50;
+        }
+        .card-link:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            background-color: #fafbfc;
+        }
+        .arrow {
+            color: #16a085;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
 
-    <!-- 2. Gráfico circular de rendimiento -->
-    <a href="grafico_circular_rendimiento.html" class="card-link">
-        <span>🥧 Gráfico Circular de Rendimiento</span>
-        <span class="arrow">&#10148;</span>
-    </a>
+    <h1>Panel de Reportes Agronómicos</h1>
 
-    <!-- 3. Gráfico de nutrientes separado -->
-    <a href="grafico_nutrientes_separado.html" class="card-link">
-        <span>🧪 Análisis de Nutrientes (mg/kg y meq)</span>
-        <span class="arrow">&#10148;</span>
-    </a>
+    <div class="grid-links">
+        <a href="Promedios_por_predio.html" class="card-link">
+            <span>📈 Promedios por Predio</span>
+            <span class="arrow">&#10148;</span>
+        </a>
+        <a href="grafico_circular_rendimiento.html" class="card-link">
+            <span>🥧 Gráfico Circular de Rendimiento</span>
+            <span class="arrow">&#10148;</span>
+        </a>
+        <a href="grafico_nutrientes_separado.html" class="card-link">
+            <span>🧪 Análisis de Nutrientes (mg/kg y meq)</span>
+            <span class="arrow">&#10148;</span>
+        </a>
+        <a href="nutrientes.html" class="card-link">
+            <span>🌱 Vista General de Nutrientes</span>
+            <span class="arrow">&#10148;</span>
+        </a>
+        <a href="tabla_dummies_interactiva9.html" class="card-link">
+            <span>📊 Tabla de Dummies Interactiva</span>
+            <span class="arrow">&#10148;</span>
+        </a>
+        <a href="tabla_rendimiento_interactiva.html" class="card-link">
+            <span>📋 Tabla de Rendimiento y Proporciones</span>
+            <span class="arrow">&#10148;</span>
+        </a>
+    </div>
 
-    <!-- 4. Nutrientes general -->
-    <a href="nutrientes.html" class="card-link">
-        <span>🌱 Vista General de Nutrientes</span>
-        <span class="arrow">&#10148;</span>
-    </a>
-
-    <!-- 5. Tabla dummies interactiva -->
-    <a href="tabla_dummies_interactiva9.html" class="card-link">
-        <span>📊 Tabla de Dummies Interactiva</span>
-        <span class="arrow">&#10148;</span>
-    </a>
-
-    <!-- 6. Tabla de rendimiento interactiva -->
-    <a href="tabla_rendimiento_interactiva.html" class="card-link">
-        <span>📋 Tabla de Rendimiento y Proporciones</span>
-        <span class="arrow">&#10148;</span>
-    </a>
-</div>
+</body>
+</html>
