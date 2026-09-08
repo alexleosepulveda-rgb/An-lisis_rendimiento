@@ -15,14 +15,26 @@
         h1 {
             text-align: center;
             color: #2c3e50;
-            margin-bottom: 30px;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            margin-bottom: 40px;
+        }
+        h2.section-title {
+            color: #34495e;
+            border-bottom: 2px solid #bdc3c7;
+            padding-bottom: 8px;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-size: 22px;
         }
         .grid-links {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 20px;
-            max-width: 1000px;
-            margin: 0 auto;
+            margin-bottom: 30px;
         }
         .card-link {
             background: #ffffff;
@@ -43,40 +55,57 @@
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
             background-color: #fafbfc;
         }
+        .card-link.tabla {
+            border-left-color: #2980b9; /* Azul para tablas */
+        }
+        .card-link.grafico {
+            border-left-color: #16a085; /* Verde azulado para gráficos */
+        }
         .arrow {
             color: #16a085;
             font-size: 18px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
         }
     </style>
 </head>
 <body>
 
-    <h1>Panel de Reportes Agronómicos</h1>
+    <div class="container">
+        <h1>Panel de Reportes Agronómicos</h1>
+        <p class="subtitle">Selecciona un reporte para visualizar los datos</p>
 
-    <div class="grid-links">
-         <a href="tabla_cumplimiento_nutrientes.html" class="card-link">
-            <span>Rendimiento por nutrientes</span>
-            <span class="arrow">&#10148;</span>
-        </a>
-        <a href="tabla_rendimiento_colores_fijos.html" class="card-link">
-            <span>Rendimiento por predio y especie</span>
-            <span class="arrow">&#10148;</span>
-        </a>
-        <a href="grafico_y_tabla_rendimiento_kilos.html" class="card-link">
-            <span>🥧 Gráfico Circular de Rendimiento</span>
-            <span class="arrow">&#10148;</span>
-        </a>
-        <a href="grafico_nutrientes_separado.html" class="card-link">
-            <span>🧪 Análisis de Nutrientes (mg/kg y meq)</span>
-            <span class="arrow">&#10148;</span>
-      
+        <!-- SECCIÓN DE TABLAS -->
+        <h2 class="section-title">📊 Tablas de Datos</h2>
+        <div class="grid-links">
+            <a href="tabla_cumplimiento_nutrientes.html" class="card-link tabla">
+                <span>Rendimiento por nutrientes</span>
+                <span class="arrow">&#10148;</span>
+            </a>
+            <a href="tabla_rendimiento_colores_fijos.html" class="card-link tabla">
+                <span>Rendimiento por predio y especie</span>
+                <span class="arrow">&#10148;</span>
+            </a>
+        </div>
 
-      
-          </a>
-        <a href="heatmap_cumplimiento_anios(4).html" class="card-link">
-            <span>Heatmap de Cumplimiento de Nutrientes por Año</span>
-            <span class="arrow">&#10148;</span>
-        </a>
+        <!-- SECCIÓN DE GRÁFICOS -->
+        <h2 class="section-title">📈 Gráficos Interactivos</h2>
+        <div class="grid-links">
+            <a href="grafico_y_tabla_rendimiento_kilos.html" class="card-link grafico">
+                <span>🥧 Gráfico Circular de Rendimiento</span>
+                <span class="arrow">&#10148;</span>
+            </a>
+            <a href="grafico_nutrientes_separado.html" class="card-link grafico">
+                <span>🧪 Análisis de Nutrientes (mg/kg y meq)</span>
+                <span class="arrow">&#10148;</span>
+            </a>
+            <a href="heatmap_cumplimiento_anios(4).html" class="card-link grafico">
+                <span>Heatmap de Cumplimiento de Nutrientes por Año</span>
+                <span class="arrow">&#10148;</span>
+            </a>
+        </div>
     </div>
 
 </body>
