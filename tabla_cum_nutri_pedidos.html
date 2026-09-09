@@ -1,16 +1,32 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
     <meta charset="utf-8">
-    <title>Cumplimiento de Nutrientes (Variables Dummy)</title>
+    <title>Cumplimiento de Nutrientes por Predio y Especie</title>
     <style>
         body { font-family: Arial, sans-serif; margin: 20px; background-color: #f4f7f6; }
-        .filters { background: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px; display: flex; gap: 20px; }
-        .filter-group { display: flex; flex-direction: column; }
-        label { font-weight: bold; margin-bottom: 5px; color: #2c3e50; }
-        select { padding: 8px; border-radius: 4px; border: 1px solid #ccc; font-size: 14px; min-width: 200px; }
+        
+        /* Contenedor de filtros mejorado para evitar colapsos */
+        .filters { 
+            background: #fff; 
+            padding: 15px 20px; 
+            border-radius: 8px; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
+            margin-bottom: 20px; 
+            display: flex; 
+            gap: 20px; 
+            flex-wrap: wrap;
+        }
+        .filter-group { 
+            display: flex; 
+            flex-direction: column; 
+            flex: 1;
+            min-width: 220px;
+        }
+        label { font-weight: bold; margin-bottom: 5px; color: #2c3e50; font-size: 14px; }
+        select { padding: 10px; border-radius: 4px; border: 1px solid #ccc; font-size: 14px; background-color: #fff; cursor: pointer; }
 
-        .container-box { background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .container-box { background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-top: 20px; }
 
         table.styled-table {
             width: 100%;
@@ -38,7 +54,6 @@
             background-color: #f1f1f1;
         }
 
-        /* Barra de progreso con degradado dinámico (Rojo a Azul) */
         .bar-container {
             position: relative;
             background-color: #e9ecef;
@@ -71,8 +86,8 @@
 
     <h2>Cumplimiento de Nutrientes por Predio y Especie</h2>
 
-    <!-- TABLA DE REFERENCIA DE PARÁMETROS NUTRICIONALES (ARRIBA) -->
-    <div style="background: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px;">
+    <!-- TABLA DE REFERENCIA DE PARÁMETROS NUTRICIONALES -->
+    <div style="background: #fff; padding: 15px 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px;">
         <h3 style="margin-top: 0; color: #2c3e50; font-size: 16px;">Parámetros de Referencia Nutricional</h3>
         <div style="overflow-x: auto;">
             <table class="styled-table">
@@ -101,14 +116,19 @@
             <label for="predioSelect">Predio:</label>
             <select id="predioSelect" onchange="actualizarTabla()">
                 <option value="Todos">Todos</option>
-                <option value="El Bosque">El Bosque</option><option value="San Lucas">San Lucas</option><option value="Santa Helena">Santa Helena</option>
+                <option value="El Bosque">El Bosque</option>
+                <option value="San Lucas">San Lucas</option>
+                <option value="Santa Helena">Santa Helena</option>
             </select>
         </div>
         <div class="filter-group">
             <label for="especieSelect">Especie:</label>
             <select id="especieSelect" onchange="actualizarTabla()">
                 <option value="Todas">Todas</option>
-                <option value="Cerezo">Cerezo</option><option value="Limonero">Limonero</option><option value="Mandarino">Mandarino</option><option value="Palto">Palto</option>
+                <option value="Cerezo">Cerezo</option>
+                <option value="Limonero">Limonero</option>
+                <option value="Mandarino">Mandarino</option>
+                <option value="Palto">Palto</option>
             </select>
         </div>
     </div>
@@ -120,12 +140,32 @@
     </div>
 
 <script>
-    var database = {"Todos__Todas": {"nutrientes": ["Ca meq 100g", "N mgkg", "P mg/kg", "K mg/kg", "Mg meq100g", "Ca Mg", "Mg K"], "conteos": [48, 24, 40, 80, 23, 69, 14], "proporciones": [0.5053, 0.2526, 0.4211, 0.8421, 0.2421, 0.7263, 0.1474], "porcentajes": [50.5, 25.3, 42.1, 84.2, 24.2, 72.6, 14.7], "total_registros": 95}, "El Bosque__Cerezo": {"nutrientes": ["Ca meq 100g", "N mgkg", "P mg/kg", "K mg/kg", "Mg meq100g", "Ca Mg", "Mg K"], "conteos": [0, 0, 0, 0, 0, 0, 0], "proporciones": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "porcentajes": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "total_registros": 0}, "El Bosque__Limonero": {"nutrientes": ["Ca meq 100g", "N mgkg", "P mg/kg", "K mg/kg", "Mg meq100g", "Ca Mg", "Mg K"], "conteos": [2, 2, 5, 7, 5, 5, 0], "proporciones": [0.2857, 0.2857, 0.7143, 1.0, 0.7143, 0.7143, 0.0], "porcentajes": [28.6, 28.6, 71.4, 100.0, 71.4, 71.4, 0.0], "total_registros": 7}, "El Bosque__Mandarino": {"nutrientes": ["Ca meq 100g", "N mgkg", "P mg/kg", "K mg/kg", "Mg meq100g", "Ca Mg", "Mg K"], "conteos": [0, 0, 0, 0, 0, 0, 0], "proporciones": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "porcentajes": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "total_registros": 0}, "El Bosque__Palto": {"nutrientes": ["Ca meq 100g", "N mgkg", "P mg/kg", "K mg/kg", "Mg meq100g", "Ca Mg", "Mg K"], "conteos": [5, 0, 13, 13, 0, 0, 5], "proporciones": [0.3846, 0.0, 1.0, 1.0, 0.0, 0.0, 0.3846], "porcentajes": [38.5, 0.0, 100.0, 100.0, 0.0, 0.0, 38.5], "total_registros": 13}, "San Lucas__Cerezo": {"nutrientes": ["Ca meq 100g", "N mgkg", "P mg/kg", "K mg/kg", "Mg meq100g", "Ca Mg", "Mg K"], "conteos": [1, 0, 0, 1, 1, 0, 1], "proporciones": [1.0, 0.0, 0.0, 1.0, 1.0, 0.0, 1.0], "porcentajes": [100.0, 0.0, 0.0, 100.0, 100.0, 0.0, 100.0], "total_registros": 1}, "San Lucas__Limonero": {"nutrientes": ["Ca meq 100g", "N mgkg", "P mg/kg", "K mg/kg", "Mg meq100g", "Ca Mg", "Mg K"], "conteos": [18, 10, 5, 13, 13, 13, 5], "proporciones": [1.0, 0.5556, 0.2778, 0.7222, 0.7222, 0.7222, 0.2778], "porcentajes": [100.0, 55.6, 27.8, 72.2, 72.2, 72.2, 27.8], "total_registros": 18}, "San Lucas__Mandarino": {"nutrientes": ["Ca meq 100g", "N mgkg", "P mg/kg", "K mg/kg", "Mg meq100g", "Ca Mg", "Mg K"], "conteos": [0, 0, 0, 0, 0, 0, 0], "proporciones": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "porcentajes": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "total_registros": 0}, "San Lucas__Palto": {"nutrientes": ["Ca meq 100g", "N mgkg", "P mg/kg", "K mg/kg", "Mg meq100g", "Ca Mg", "Mg K"], "conteos": [7, 0, 7, 7, 4, 4, 3], "proporciones": [1.0, 0.0, 1.0, 1.0, 0.5714, 0.5714, 0.4286], "porcentajes": [100.0, 0.0, 100.0, 100.0, 57.1, 57.1, 42.9], "total_registros": 7}, "Santa Helena__Cerezo": {"nutrientes": ["Ca meq 100g", "N mgkg", "P mg/kg", "K mg/kg", "Mg meq100g", "Ca Mg", "Mg K"], "conteos": [0, 0, 0, 0, 0, 0, 0], "proporciones": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "porcentajes": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "total_registros": 0}, "Santa Helena__Limonero": {"nutrientes": ["Ca meq 100g", "N mgkg", "P mg/kg", "K mg/kg", "Mg meq100g", "Ca Mg", "Mg K"], "conteos": [2, 2, 0, 2, 0, 0, 0], "proporciones": [1.0, 1.0, 0.0, 1.0, 0.0, 0.0, 0.0], "porcentajes": [100.0, 100.0, 0.0, 100.0, 0.0, 0.0, 0.0], "total_registros": 2}, "Santa Helena__Mandarino": {"nutrientes": ["Ca meq 100g", "N mgkg", "P mg/kg", "K mg/kg", "Mg meq100g", "Ca Mg", "Mg K"], "conteos": [10, 0, 0, 0, 0, 10, 0], "proporciones": [1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0], "porcentajes": [100.0, 0.0, 0.0, 0.0, 0.0, 100.0, 0.0], "total_registros": 10}, "Santa Helena__Palto": {"nutrientes": ["Ca meq 100g", "N mgkg", "P mg/kg", "K mg/kg", "Mg meq100g", "Ca Mg", "Mg K"], "conteos": [3, 10, 10, 37, 0, 37, 0], "proporciones": [0.0811, 0.2703, 0.2703, 1.0, 0.0, 1.0, 0.0], "porcentajes": [8.1, 27.0, 27.0, 100.0, 0.0, 100.0, 0.0], "total_registros": 37}, "El Bosque__Todas": {"nutrientes": ["Ca meq 100g", "N mgkg", "P mg/kg", "K mg/kg", "Mg meq100g", "Ca Mg", "Mg K"], "conteos": [7, 2, 18, 20, 5, 5, 5], "proporciones": [0.35, 0.1, 0.9, 1.0, 0.25, 0.25, 0.25], "porcentajes": [35.0, 10.0, 90.0, 100.0, 25.0, 25.0, 25.0], "total_registros": 20}, "San Lucas__Todas": {"nutrientes": ["Ca meq 100g", "N mgkg", "P mg/kg", "K mg/kg", "Mg meq100g", "Ca Mg", "Mg K"], "conteos": [26, 10, 12, 21, 18, 17, 9], "proporciones": [1.0, 0.3846, 0.4615, 0.8077, 0.6923, 0.6538, 0.3462], "porcentajes": [100.0, 38.5, 46.2, 80.8, 69.2, 65.4, 34.6], "total_registros": 26}, "Santa Helena__Todas": {"nutrientes": ["Ca meq 100g", "N mgkg", "P mg/kg", "K mg/kg", "Mg meq100g", "Ca Mg", "Mg K"], "conteos": [15, 12, 10, 39, 0, 47, 0], "proporciones": [0.3061, 0.2449, 0.2041, 0.7959, 0.0, 0.9592, 0.0], "porcentajes": [30.6, 24.5, 20.4, 79.6, 0.0, 95.9, 0.0], "total_registros": 49}, "Todos__Cerezo": {"nutrientes": ["Ca meq 100g", "N mgkg", "P mg/kg", "K mg/kg", "Mg meq100g", "Ca Mg", "Mg K"], "conteos": [1, 0, 0, 1, 1, 0, 1], "proporciones": [1.0, 0.0, 0.0, 1.0, 1.0, 0.0, 1.0], "porcentajes": [100.0, 0.0, 0.0, 100.0, 100.0, 0.0, 100.0], "total_registros": 1}, "Todos__Limonero": {"nutrientes": ["Ca meq 100g", "N mgkg", "P mg/kg", "K mg/kg", "Mg meq100g", "Ca Mg", "Mg K"], "conteos": [22, 14, 10, 22, 18, 18, 5], "proporciones": [0.8148, 0.5185, 0.3704, 0.8148, 0.6667, 0.6667, 0.1852], "porcentajes": [81.5, 51.9, 37.0, 81.5, 66.7, 66.7, 18.5], "total_registros": 27}, "Todos__Mandarino": {"nutrientes": ["Ca meq 100g", "N mgkg", "P mg/kg", "K mg/kg", "Mg meq100g", "Ca Mg", "Mg K"], "conteos": [10, 0, 0, 0, 0, 10, 0], "proporciones": [1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0], "porcentajes": [100.0, 0.0, 0.0, 0.0, 0.0, 100.0, 0.0], "total_registros": 10}, "Todos__Palto": {"nutrientes": ["Ca meq 100g", "N mgkg", "P mg/kg", "K mg/kg", "Mg meq100g", "Ca Mg", "Mg K"], "conteos": [15, 10, 30, 57, 4, 41, 8], "proporciones": [0.2632, 0.1754, 0.5263, 1.0, 0.0702, 0.7193, 0.1404], "porcentajes": [26.3, 17.5, 52.6, 100.0, 7.0, 71.9, 14.0], "total_registros": 57}};
+    var database = {
+        "Todos__Todas": {"nutrientes": ["Ca meq 100g", "N mgkg", "P mg/kg", "K mg/kg", "Mg meq100g", "Ca Mg", "Mg K"], "conteos": [48, 24, 40, 80, 23, 69, 14], "proporciones": [0.5053, 0.2526, 0.4211, 0.8421, 0.2421, 0.7263, 0.1474], "porcentajes": [50.5, 25.3, 42.1, 84.2, 24.2, 72.6, 14.7], "total_registros": 95},
+        "El Bosque__Cerezo": {"nutrientes": ["Ca meq 100g", "N mgkg", "P mg/kg", "K mg/kg", "Mg meq100g", "Ca Mg", "Mg K"], "conteos": [0, 0, 0, 0, 0, 0, 0], "proporciones": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "porcentajes": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "total_registros": 0},
+        "El Bosque__Limonero": {"nutrientes": ["Ca meq 100g", "N mgkg", "P mg/kg", "K mg/kg", "Mg meq100g", "Ca Mg", "Mg K"], "conteos": [2, 2, 5, 7, 5, 5, 0], "proporciones": [0.2857, 0.2857, 0.7143, 1.0, 0.7143, 0.7143, 0.0], "porcentajes": [28.6, 28.6, 71.4, 100.0, 71.4, 71.4, 0.0], "total_registros": 7},
+        "El Bosque__Mandarino": {"nutrientes": ["Ca meq 100g", "N mgkg", "P mg/kg", "K mg/kg", "Mg meq100g", "Ca Mg", "Mg K"], "conteos": [0, 0, 0, 0, 0, 0, 0], "proporciones": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "porcentajes": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "total_registros": 0},
+        "El Bosque__Palto": {"nutrientes": ["Ca meq 100g", "N mgkg", "P mg/kg", "K mg/kg", "Mg meq100g", "Ca Mg", "Mg K"], "conteos": [5, 0, 13, 13, 0, 0, 5], "proporciones": [0.3846, 0.0, 1.0, 1.0, 0.0, 0.0, 0.3846], "porcentajes": [38.5, 0.0, 100.0, 100.0, 0.0, 0.0, 38.5], "total_registros": 13},
+        "San Lucas__Cerezo": {"nutrientes": ["Ca meq 100g", "N mgkg", "P mg/kg", "K mg/kg", "Mg meq100g", "Ca Mg", "Mg K"], "conteos": [1, 0, 0, 1, 1, 0, 1], "proporciones": [1.0, 0.0, 0.0, 1.0, 1.0, 0.0, 1.0], "porcentajes": [100.0, 0.0, 0.0, 100.0, 100.0, 0.0, 100.0], "total_registros": 1},
+        "San Lucas__Limonero": {"nutrientes": ["Ca meq 100g", "N mgkg", "P mg/kg", "K mg/kg", "Mg meq100g", "Ca Mg", "Mg K"], "conteos": [18, 10, 5, 13, 13, 13, 5], "proporciones": [1.0, 0.5556, 0.2778, 0.7222, 0.7222, 0.7222, 0.2778], "porcentajes": [100.0, 55.6, 27.8, 72.2, 72.2, 72.2, 27.8], "total_registros": 18},
+        "San Lucas__Mandarino": {"nutrientes": ["Ca meq 100g", "N mgkg", "P mg/kg", "K mg/kg", "Mg meq100g", "Ca Mg", "Mg K"], "conteos": [0, 0, 0, 0, 0, 0, 0], "proporciones": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "porcentajes": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "total_registros": 0},
+        "San Lucas__Palto": {"nutrientes": ["Ca meq 100g", "N mgkg", "P mg/kg", "K mg/kg", "Mg meq100g", "Ca Mg", "Mg K"], "conteos": [7, 0, 7, 7, 4, 4, 3], "proporciones": [1.0, 0.0, 1.0, 1.0, 0.5714, 0.5714, 0.4286], "porcentajes": [100.0, 0.0, 100.0, 100.0, 57.1, 57.1, 42.9], "total_registros": 7},
+        "Santa Helena__Cerezo": {"nutrientes": ["Ca meq 100g", "N mgkg", "P mg/kg", "K mg/kg", "Mg meq100g", "Ca Mg", "Mg K"], "conteos": [0, 0, 0, 0, 0, 0, 0], "proporciones": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "porcentajes": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "total_registros": 0},
+        "Santa Helena__Limonero": {"nutrientes": ["Ca meq 100g", "N mgkg", "P mg/kg", "K mg/kg", "Mg meq100g", "Ca Mg", "Mg K"], "conteos": [2, 2, 0, 2, 0, 0, 0], "proporciones": [1.0, 1.0, 0.0, 1.0, 0.0, 0.0, 0.0], "porcentajes": [100.0, 100.0, 0.0, 100.0, 0.0, 0.0, 0.0], "total_registros": 2},
+        "Santa Helena__Mandarino": {"nutrientes": ["Ca meq 100g", "N mgkg", "P mg/kg", "K mg/kg", "Mg meq100g", "Ca Mg", "Mg K"], "conteos": [10, 0, 0, 0, 0, 10, 0], "proporciones": [1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0], "porcentajes": [100.0, 0.0, 0.0, 0.0, 0.0, 100.0, 0.0], "total_registros": 10},
+        "Santa Helena__Palto": {"nutrientes": ["Ca meq 100g", "N mgkg", "P mg/kg", "K mg/kg", "Mg meq100g", "Ca Mg", "Mg K"], "conteos": [3, 10, 10, 37, 0, 37, 0], "proporciones": [0.0811, 0.2703, 0.2703, 1.0, 0.0, 1.0, 0.0], "porcentajes": [8.1, 27.0, 27.0, 100.0, 0.0, 100.0, 0.0], "total_registros": 37},
+        "El Bosque__Todas": {"nutrientes": ["Ca meq 100g", "N mgkg", "P mg/kg", "K mg/kg", "Mg meq100g", "Ca Mg", "Mg K"], "conteos": [7, 2, 18, 20, 5, 5, 5], "proporciones": [0.35, 0.1, 0.9, 1.0, 0.25, 0.25, 0.25], "porcentajes": [35.0, 10.0, 90.0, 100.0, 25.0, 25.0, 25.0], "total_registros": 20},
+        "San Lucas__Todas": {"nutrientes": ["Ca meq 100g", "N mgkg", "P mg/kg", "K mg/kg", "Mg meq100g", "Ca Mg", "Mg K"], "conteos": [26, 10, 12, 21, 18, 17, 9], "proporciones": [1.0, 0.3846, 0.4615, 0.8077, 0.6923, 0.6538, 0.3462], "porcentajes": [100.0, 38.5, 46.2, 80.8, 69.2, 65.4, 34.6], "total_registros": 26},
+        "Santa Helena__Todas": {"nutrientes": ["Ca meq 100g", "N mgkg", "P mg/kg", "K mg/kg", "Mg meq100g", "Ca Mg", "Mg K"], "conteos": [15, 12, 10, 39, 0, 47, 0], "proporciones": [0.3061, 0.2449, 0.2041, 0.7959, 0.0, 0.9592, 0.0], "porcentajes": [30.6, 24.5, 20.4, 79.6, 0.0, 95.9, 0.0], "total_registros": 49},
+        "Todos__Cerezo": {"nutrientes": ["Ca meq 100g", "N mgkg", "P mg/kg", "K mg/kg", "Mg meq100g", "Ca Mg", "Mg K"], "conteos": [1, 0, 0, 1, 1, 0, 1], "proporciones": [1.0, 0.0, 0.0, 1.0, 1.0, 0.0, 1.0], "porcentajes": [100.0, 0.0, 0.0, 100.0, 100.0, 0.0, 100.0], "total_registros": 1},
+        "Todos__Limonero": {"nutrientes": ["Ca meq 100g", "N mgkg", "P mg/kg", "K mg/kg", "Mg meq100g", "Ca Mg", "Mg K"], "conteos": [22, 14, 10, 22, 18, 18, 5], "proporciones": [0.8148, 0.5185, 0.3704, 0.8148, 0.6667, 0.6667, 0.1852], "porcentajes": [81.5, 51.9, 37.0, 81.5, 66.7, 66.7, 18.5], "total_registros": 27},
+        "Todos__Mandarino": {"nutrientes": ["Ca meq 100g", "N mgkg", "P mg/kg", "K mg/kg", "Mg meq100g", "Ca Mg", "Mg K"], "conteos": [10, 0, 0, 0, 0, 10, 0], "proporciones": [1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0], "porcentajes": [100.0, 0.0, 0.0, 0.0, 0.0, 100.0, 0.0], "total_registros": 10},
+        "Todos__Palto": {"nutrientes": ["Ca meq 100g", "N mgkg", "P mg/kg", "K mg/kg", "Mg meq100g", "Ca Mg", "Mg K"], "conteos": [15, 10, 30, 57, 4, 41, 8], "proporciones": [0.2632, 0.1754, 0.5263, 1.0, 0.0702, 0.7193, 0.1404], "porcentajes": [26.3, 17.5, 52.6, 100.0, 7.0, 71.9, 14.0], "total_registros": 57}
+    };
 
-    // Función para interpolar color de Rojo (0%) a Azul (100%)
     function obtenerColorGradiente(pct) {
-        if (pct <= 0) return '#e74c3c'; // Rojo
-        if (pct >= 100) return '#3498db'; // Azul
+        if (pct <= 0) return '#e74c3c';
+        if (pct >= 100) return '#3498db';
 
         var r = Math.round(231 - (231 - 52) * (pct / 100));
         var g = Math.round(76 - (76 - 152) * (pct / 100));
@@ -183,7 +223,10 @@
         document.getElementById('tablaDiv').innerHTML = html;
     }
 
-    actualizarTabla();
+    // Ejecutar al cargar la página
+    window.onload = function() {
+        actualizarTabla();
+    };
 </script>
 
 </body>
