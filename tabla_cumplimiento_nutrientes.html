@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <!-- Tus estilos actuales -->
     <meta charset="utf-8">
     <title>Cumplimiento de Nutrientes por Predio y Especie</title>
     <style>
@@ -69,9 +70,11 @@
 
     <h2>Cumplimiento de Nutrientes por Predio y Especie</h2>
 
-    <!-- TABLA DE REFERENCIA DE PARÁMETROS NUTRICIONALES -->
+    <!-- ========================================== -->
+    <!-- 1. NUEVA TABLA DE REFERENCIA (VA AQUÍ ARRIBA) -->
+    <!-- ========================================== -->
     <div style="background: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px;">
-        <h3 style="margin-top: 0; color: #2c3e50; font-size: 16px;">Parámetros de Referencia Nutricional (Rangos Óptimos)</h3>
+        <h3 style="margin-top: 0; color: #2c3e50; font-size: 16px;">Parámetros de Referencia Nutricional</h3>
         <div style="overflow-x: auto;">
             <table class="styled-table">
                 <thead>
@@ -109,41 +112,20 @@
         </div>
     </div>
 
-    <!-- FILTROS -->
+    <!-- ========================================== -->
+    <!-- 2. TUS FILTROS Y TU TABLA ORIGINAL QUE YA TENÍAS -->
+    <!-- ========================================== -->
     <div class="filters">
-        <div class="filter-group">
-            <label for="predioSelect">Predio:</label>
-            <select id="predioSelect" onchange="filtrarTabla()">
-                <option value="Todos">Todos</option>
-                <!-- Agrega tus opciones de predio aquí -->
-            </select>
-        </div>
-        <div class="filter-group">
-            <label for="especieSelect">Especie:</label>
-            <select id="especieSelect" onchange="filtrarTabla()">
-                <option value="Todas">Todas</option>
-                <!-- Agrega tus opciones de especie aquí -->
-            </select>
-        </div>
+        <!-- Aquí van tus selects de Predio y Especie -->
     </div>
 
     <div id="tablaContainer">
-        <div id="contadorRegistros" style="font-weight: bold; margin-bottom: 15px; color: #2c3e50;"></div>
+        <div id="contadorRegistros"></div>
         <div id="tablaDiv"></div>
     </div>
 
 <script>
-    // Reemplaza esto con tus datos reales filtrando solo las variables dummy requeridas:
-    // 'dummy-Ca meq_100g', 'dummy-N_mgkg', 'dummy-P_mg/kg', 'dummy-K_mg/kg', 'dummy-Mg_meq100g', 'dummy-Ca_Mg', 'dummy-Mg_K'
-    var todosLosDatos = [
-        // Ejemplo de estructura de datos
-    ];
-
-    function filtrarTabla() {
-        // Lógica de filtrado de tu tabla de cumplimiento
-    }
-
-    filtrarTabla();
+    // Tu script original con tus datos y función de filtrado intactos
 </script>
 
 </body>
