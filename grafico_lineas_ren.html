@@ -1,0 +1,119 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Comparativa de Rendimientos por Nutrientes</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f4f7f6; }
+        .filters { background: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px; display: flex; gap: 20px; flex-wrap: wrap; }
+        .filter-group { display: flex; flex-direction: column; }
+        label { font-weight: bold; margin-bottom: 5px; color: #2c3e50; }
+        select { padding: 8px; border-radius: 4px; border: 1px solid #ccc; font-size: 14px; min-width: 180px; }
+        .grafico-container { background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+
+    <h2>Comparativa de Perfiles Nutricionales según Niveles de Rendimiento</h2>
+
+    <div class="filters">
+        <div class="filter-group">
+            <label for="predioSelect">Predio:</label>
+            <select id="predioSelect" onchange="actualizarGraficos()">
+                <option value="Todos">Todos</option>
+                <option value="El Bosque">El Bosque</option><option value="San Lucas">San Lucas</option><option value="Santa Helena">Santa Helena</option>
+            </select>
+        </div>
+        <div class="filter-group">
+            <label for="especieSelect">Especie:</label>
+            <select id="especieSelect" onchange="actualizarGraficos()">
+                <option value="Todas">Todas</option>
+                <option value="Cerezo">Cerezo</option><option value="Limonero">Limonero</option><option value="Mandarino">Mandarino</option><option value="Palto">Palto</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="grafico-container">
+        <div id="chartMg" style="width: 100%; height: 500px;"></div>
+    </div>
+
+    <div class="grafico-container">
+        <div id="chartMeq" style="width: 100%; height: 500px;"></div>
+    </div>
+
+<script>
+    var database = {"Todos__Todas": {"mg_names": ["N mg/kg", "P mg/kg", "K mg/kg"], "meq_names": ["Ca meq/100g", "Mg meq/100g"], "mg_by_rend": {"Alto": [15.0, 16.0, 156.75], "Bajo": [14.709677419354838, 27.35483870967742, 183.6451612903226], "Medio": [8.354166666666666, 18.75, 90.08333333333333]}, "meq_by_rend": {"Alto": [11.2, 2.0949999999999998], "Bajo": [13.69677419354839, 2.1312903225806448], "Medio": [9.285416666666668, 2.1354166666666665]}, "rendimientos": ["Alto", "Bajo", "Medio"]}, "Todos__Cerezo": {"mg_names": ["N mg/kg", "P mg/kg", "K mg/kg"], "meq_names": ["Ca meq/100g", "Mg meq/100g"], "mg_by_rend": {"Alto": [0.0, 0.0, 0.0], "Bajo": [10.0, 16.0, 211.0], "Medio": [0.0, 0.0, 0.0]}, "meq_by_rend": {"Alto": [0.0, 0.0], "Bajo": [12.4, 1.77], "Medio": [0.0, 0.0]}, "rendimientos": ["Alto", "Bajo", "Medio"]}, "Todos__Limonero": {"mg_names": ["N mg/kg", "P mg/kg", "K mg/kg"], "meq_names": ["Ca meq/100g", "Mg meq/100g"], "mg_by_rend": {"Alto": [19.09090909090909, 16.454545454545453, 112.54545454545455], "Bajo": [21.714285714285715, 24.0, 209.28571428571428], "Medio": [4.555555555555555, 24.11111111111111, 122.88888888888889]}, "meq_by_rend": {"Alto": [10.427272727272726, 1.6381818181818177], "Bajo": [11.242857142857142, 2.094285714285714], "Medio": [9.866666666666667, 1.6844444444444442]}, "rendimientos": ["Alto", "Bajo", "Medio"]}, "Todos__Mandarino": {"mg_names": ["N mg/kg", "P mg/kg", "K mg/kg"], "meq_names": ["Ca meq/100g", "Mg meq/100g"], "mg_by_rend": {"Alto": [6.0, 15.0, 254.0], "Bajo": [0.0, 0.0, 0.0], "Medio": [6.0, 15.0, 254.0]}, "meq_by_rend": {"Alto": [12.9, 3.1], "Bajo": [0.0, 0.0], "Medio": [12.9, 3.1]}, "rendimientos": ["Alto", "Bajo", "Medio"]}, "Todos__Palto": {"mg_names": ["N mg/kg", "P mg/kg", "K mg/kg"], "meq_names": ["Ca meq/100g", "Mg meq/100g"], "mg_by_rend": {"Alto": [0.0, 0.0, 0.0], "Bajo": [12.782608695652174, 28.869565217391305, 174.65217391304347], "Medio": [9.705882352941176, 17.88235294117647, 57.294117647058826]}, "meq_by_rend": {"Alto": [0.0, 0.0], "Bajo": [14.5, 2.1582608695652175], "Medio": [8.600000000000003, 2.1129411764705885]}, "rendimientos": ["Alto", "Bajo", "Medio"]}, "El Bosque__Todas": {"mg_names": ["N mg/kg", "P mg/kg", "K mg/kg"], "meq_names": ["Ca meq/100g", "Mg meq/100g"], "mg_by_rend": {"Alto": [26.0, 19.0, 90.0], "Bajo": [13.307692307692308, 22.923076923076923, 172.69230769230768], "Medio": [5.0, 33.0, 90.0]}, "meq_by_rend": {"Alto": [10.1, 1.38], "Bajo": [16.23076923076923, 2.168461538461538], "Medio": [9.2, 1.6800000000000002]}, "rendimientos": ["Alto", "Bajo", "Medio"]}, "El Bosque__Cerezo": {"mg_names": ["N mg/kg", "P mg/kg", "K mg/kg"], "meq_names": ["Ca meq/100g", "Mg meq/100g"], "mg_by_rend": {"Alto": [0.0, 0.0, 0.0], "Bajo": [0.0, 0.0, 0.0], "Medio": [0.0, 0.0, 0.0]}, "meq_by_rend": {"Alto": [0.0, 0.0], "Bajo": [0.0, 0.0], "Medio": [0.0, 0.0]}, "rendimientos": ["Alto", "Bajo", "Medio"]}, "El Bosque__Limonero": {"mg_names": ["N mg/kg", "P mg/kg", "K mg/kg"], "meq_names": ["Ca meq/100g", "Mg meq/100g"], "mg_by_rend": {"Alto": [26.0, 19.0, 90.0], "Bajo": [0.0, 0.0, 0.0], "Medio": [5.0, 33.0, 90.0]}, "meq_by_rend": {"Alto": [10.1, 1.38], "Bajo": [0.0, 0.0], "Medio": [9.2, 1.6800000000000002]}, "rendimientos": ["Alto", "Bajo", "Medio"]}, "El Bosque__Mandarino": {"mg_names": ["N mg/kg", "P mg/kg", "K mg/kg"], "meq_names": ["Ca meq/100g", "Mg meq/100g"], "mg_by_rend": {"Alto": [0.0, 0.0, 0.0], "Bajo": [0.0, 0.0, 0.0], "Medio": [0.0, 0.0, 0.0]}, "meq_by_rend": {"Alto": [0.0, 0.0], "Bajo": [0.0, 0.0], "Medio": [0.0, 0.0]}, "rendimientos": ["Alto", "Bajo", "Medio"]}, "El Bosque__Palto": {"mg_names": ["N mg/kg", "P mg/kg", "K mg/kg"], "meq_names": ["Ca meq/100g", "Mg meq/100g"], "mg_by_rend": {"Alto": [0.0, 0.0, 0.0], "Bajo": [13.307692307692308, 22.923076923076923, 172.69230769230768], "Medio": [0.0, 0.0, 0.0]}, "meq_by_rend": {"Alto": [0.0, 0.0], "Bajo": [16.23076923076923, 2.168461538461538], "Medio": [0.0, 0.0]}, "rendimientos": ["Alto", "Bajo", "Medio"]}, "San Lucas__Todas": {"mg_names": ["N mg/kg", "P mg/kg", "K mg/kg"], "meq_names": ["Ca meq/100g", "Mg meq/100g"], "mg_by_rend": {"Alto": [17.555555555555557, 15.88888888888889, 117.55555555555556], "Bajo": [14.538461538461538, 27.384615384615383, 205.46153846153845], "Medio": [4.0, 13.0, 164.0]}, "meq_by_rend": {"Alto": [10.5, 1.6955555555555553], "Bajo": [11.80769230769231, 2.073846153846154], "Medio": [10.7, 1.69]}, "rendimientos": ["Alto", "Bajo", "Medio"]}, "San Lucas__Cerezo": {"mg_names": ["N mg/kg", "P mg/kg", "K mg/kg"], "meq_names": ["Ca meq/100g", "Mg meq/100g"], "mg_by_rend": {"Alto": [0.0, 0.0, 0.0], "Bajo": [10.0, 16.0, 211.0], "Medio": [0.0, 0.0, 0.0]}, "meq_by_rend": {"Alto": [0.0, 0.0], "Bajo": [12.4, 1.77], "Medio": [0.0, 0.0]}, "rendimientos": ["Alto", "Bajo", "Medio"]}, "San Lucas__Limonero": {"mg_names": ["N mg/kg", "P mg/kg", "K mg/kg"], "meq_names": ["Ca meq/100g", "Mg meq/100g"], "mg_by_rend": {"Alto": [17.555555555555557, 15.88888888888889, 117.55555555555556], "Bajo": [20.0, 26.0, 257.0], "Medio": [4.0, 13.0, 164.0]}, "meq_by_rend": {"Alto": [10.5, 1.6955555555555553], "Bajo": [11.7, 2.38], "Medio": [10.7, 1.69]}, "rendimientos": ["Alto", "Bajo", "Medio"]}, "San Lucas__Mandarino": {"mg_names": ["N mg/kg", "P mg/kg", "K mg/kg"], "meq_names": ["Ca meq/100g", "Mg meq/100g"], "mg_by_rend": {"Alto": [0.0, 0.0, 0.0], "Bajo": [0.0, 0.0, 0.0], "Medio": [0.0, 0.0, 0.0]}, "meq_by_rend": {"Alto": [0.0, 0.0], "Bajo": [0.0, 0.0], "Medio": [0.0, 0.0]}, "rendimientos": ["Alto", "Bajo", "Medio"]}, "San Lucas__Palto": {"mg_names": ["N mg/kg", "P mg/kg", "K mg/kg"], "meq_names": ["Ca meq/100g", "Mg meq/100g"], "mg_by_rend": {"Alto": [0.0, 0.0, 0.0], "Bajo": [11.285714285714286, 30.0, 167.85714285714286], "Medio": [0.0, 0.0, 0.0]}, "meq_by_rend": {"Alto": [0.0, 0.0], "Bajo": [11.8, 1.8985714285714284], "Medio": [0.0, 0.0]}, "rendimientos": ["Alto", "Bajo", "Medio"]}, "Santa Helena__Todas": {"mg_names": ["N mg/kg", "P mg/kg", "K mg/kg"], "meq_names": ["Ca meq/100g", "Mg meq/100g"], "mg_by_rend": {"Alto": [6.0, 15.0, 254.0], "Bajo": [18.8, 38.8, 155.4], "Medio": [9.23076923076923, 17.512820512820515, 82.51282051282051]}, "meq_by_rend": {"Alto": [12.9, 3.1], "Bajo": [12.020000000000001, 2.1839999999999997], "Medio": [9.151282051282054, 2.2394871794871802]}, "rendimientos": ["Alto", "Bajo", "Medio"]}, "Santa Helena__Cerezo": {"mg_names": ["N mg/kg", "P mg/kg", "K mg/kg"], "meq_names": ["Ca meq/100g", "Mg meq/100g"], "mg_by_rend": {"Alto": [0.0, 0.0, 0.0], "Bajo": [0.0, 0.0, 0.0], "Medio": [0.0, 0.0, 0.0]}, "meq_by_rend": {"Alto": [0.0, 0.0], "Bajo": [0.0, 0.0], "Medio": [0.0, 0.0]}, "rendimientos": ["Alto", "Bajo", "Medio"]}, "Santa Helena__Limonero": {"mg_names": ["N mg/kg", "P mg/kg", "K mg/kg"], "meq_names": ["Ca meq/100g", "Mg meq/100g"], "mg_by_rend": {"Alto": [0.0, 0.0, 0.0], "Bajo": [26.0, 19.0, 90.0], "Medio": [0.0, 0.0, 0.0]}, "meq_by_rend": {"Alto": [0.0, 0.0], "Bajo": [10.1, 1.38], "Medio": [0.0, 0.0]}, "rendimientos": ["Alto", "Bajo", "Medio"]}, "Santa Helena__Mandarino": {"mg_names": ["N mg/kg", "P mg/kg", "K mg/kg"], "meq_names": ["Ca meq/100g", "Mg meq/100g"], "mg_by_rend": {"Alto": [6.0, 15.0, 254.0], "Bajo": [0.0, 0.0, 0.0], "Medio": [6.0, 15.0, 254.0]}, "meq_by_rend": {"Alto": [12.9, 3.1], "Bajo": [0.0, 0.0], "Medio": [12.9, 3.1]}, "rendimientos": ["Alto", "Bajo", "Medio"]}, "Santa Helena__Palto": {"mg_names": ["N mg/kg", "P mg/kg", "K mg/kg"], "meq_names": ["Ca meq/100g", "Mg meq/100g"], "mg_by_rend": {"Alto": [0.0, 0.0, 0.0], "Bajo": [14.0, 52.0, 199.0], "Medio": [9.705882352941176, 17.88235294117647, 57.294117647058826]}, "meq_by_rend": {"Alto": [0.0, 0.0], "Bajo": [13.300000000000002, 2.72], "Medio": [8.600000000000003, 2.1129411764705885]}, "rendimientos": ["Alto", "Bajo", "Medio"]}};
+
+    function getColorForRendimiento(rend, index) {
+        var rLower = rend.toLowerCase();
+        if (rLower.includes('alto') || rLower.includes('alta')) return '#3498db'; // Azul corregido
+        if (rLower.includes('medio') || rLower.includes('media')) return '#f1c40f'; // Amarillo
+        if (rLower.includes('bajo') || rLower.includes('baja')) return '#e74c3c'; // Rojo corregido
+
+        var palette = ['#2ecc71', '#9b59b6', '#e67e22', '#1abc9c', '#34495e'];
+        return palette[index % palette.length];
+    }
+
+    function actualizarGraficos() {
+        var predio = document.getElementById('predioSelect').value;
+        var especie = document.getElementById('especieSelect').value;
+
+        var key = predio + '__' + especie;
+        var datos = database[key] || database['Todos__Todas'];
+
+        // 1. Trazas múltiples para mg/kg
+        var tracesMg = [];
+        datos.rendimientos.forEach((rend, index) => {
+            var yVals = datos.mg_by_rend[rend] || [];
+            tracesMg.push({
+                type: 'scatter',
+                mode: 'lines+markers',
+                name: 'Rendimiento: ' + rend,
+                x: datos.mg_names,
+                y: yVals,
+                line: { color: getColorForRendimiento(rend, index), width: 3 },
+                marker: { size: 7 }
+            });
+        });
+
+        var layoutMg = {
+            title: '<b>Promedio de Nutrientes (mg/kg) por Rendimiento (Predio: ' + predio + ' | Especie: ' + especie + ')</b>',
+            xaxis: { title: 'Nutrientes' },
+            yaxis: { title: 'Promedio (mg/kg)', zeroline: false },
+            margin: { l: 60, r: 30, t: 50, b: 50 },
+            legend: { orientation: 'h', y: -0.2 }
+        };
+        Plotly.react('chartMg', tracesMg, layoutMg);
+
+        // 2. Trazas múltiples para meq/100g
+        var tracesMeq = [];
+        datos.rendimientos.forEach((rend, index) => {
+            var yVals = datos.meq_by_rend[rend] || [];
+            tracesMeq.push({
+                type: 'scatter',
+                mode: 'lines+markers',
+                name: 'Rendimiento: ' + rend,
+                x: datos.meq_names,
+                y: yVals,
+                line: { color: getColorForRendimiento(rend, index), width: 3 },
+                marker: { size: 7 }
+            });
+        });
+
+        var layoutMeq = {
+            title: '<b>Promedio de Intercambio Catiónico (meq/100g) por Rendimiento (Predio: ' + predio + ' | Especie: ' + especie + ')</b>',
+            xaxis: { title: 'Nutrientes / Bases' },
+            yaxis: { title: 'Promedio (meq/100g)', zeroline: false },
+            margin: { l: 60, r: 30, t: 50, b: 50 },
+            legend: { orientation: 'h', y: -0.2 }
+        };
+        Plotly.react('chartMeq', tracesMeq, layoutMeq);
+    }
+
+    actualizarGraficos();
+</script>
+
+</body>
+</html>
