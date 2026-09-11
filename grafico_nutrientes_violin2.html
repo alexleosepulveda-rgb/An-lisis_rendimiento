@@ -113,60 +113,6 @@
 
     actualizarGraficos();
 </script>
-<!-- Código completado y cerrado correctamente -->
-    <script>
-    function actualizarGraficos() {
-        var predio = document.getElementById('predioSelect').value;
-        var especie = document.getElementById('especieSelect').value;
-        var rendimiento = document.getElementById('rendimientoSelect').value;
 
-        var key = predio + "__" + especie + "__" + rendimiento;
-        var data = database[key];
-
-        if (!data) {
-            console.error("No se encontraron datos para la combinación: " + key);
-            return;
-        }
-
-        var traceMg = [];
-        for (var i = 0; i < data.mg_names.length; i++) {
-            traceMg.push({
-                y: data.mg_values[i],
-                name: data.mg_names[i],
-                type: 'box'
-            });
-        }
-
-        var layoutMg = {
-            title: 'Nutrientes en mg/kg',
-            yaxis: { title: 'mg/kg' }
-        };
-
-        Plotly.newPlot('chartMg', traceMg, layoutMg);
-
-        var traceMeq = [];
-        for (var j = 0; j < data.meq_names.length; j++) {
-            traceMeq.push({
-                y: data.meq_values[j],
-                name: data.meq_names[j],
-                type: 'box'
-            });
-        }
-
-        var layoutMeq = {
-            title: 'Nutrientes en meq/100g',
-            yaxis: { title: 'meq/100g' }
-        };
-
-        Plotly.newPlot('chartMeq', traceMeq, layoutMeq);
-    }
-
-    // Inicializar gráficos al cargar la página
-    window.onload = function() {
-        actualizarGraficos();
-    };
-    </script>
-</body>
-</html>
 </body>
 </html>
